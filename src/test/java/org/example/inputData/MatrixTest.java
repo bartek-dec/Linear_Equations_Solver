@@ -1,20 +1,21 @@
-package org.example;
+package org.example.inputData;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class MatrixTest {
 
     private Matrix matrix;
-    private Row[] rows;
+    private BigDecimal[][] elements;
 
     @BeforeEach
     void setUp() {
-        rows = new Row[3];
+        elements = new BigDecimal[3][];
         BigDecimal[] row1 = new BigDecimal[]{new BigDecimal("2"), new BigDecimal("1"),
                 new BigDecimal("2"), new BigDecimal("9")};
 
@@ -24,11 +25,11 @@ class MatrixTest {
         BigDecimal[] row3 = new BigDecimal[]{new BigDecimal("3"), new BigDecimal("6"),
                 new BigDecimal("-5"), new BigDecimal("0")};
 
-        rows[0] = new Row(row1);
-        rows[1] = new Row(row2);
-        rows[2] = new Row(row3);
+        elements[0] = row1;
+        elements[1] = row2;
+        elements[2] = row3;
 
-        matrix = new Matrix(rows);
+        matrix = new Matrix(elements);
     }
 
     @Test
@@ -36,7 +37,7 @@ class MatrixTest {
         BigDecimal[] expected = new BigDecimal[]{new BigDecimal("2"), new BigDecimal("4"),
                 new BigDecimal("-3"), new BigDecimal("1")};
 
-        assertArrayEquals(expected, matrix.getRow(1).getCoefficients());
+        assertArrayEquals(expected, matrix.getRow(1).getElements());
     }
 
     @Test
@@ -51,10 +52,10 @@ class MatrixTest {
 
     @Test
     void multiplyRow() {
-        BigDecimal[] expected = new BigDecimal[]{new BigDecimal("4"), new BigDecimal("8"),
-                new BigDecimal("-6"), new BigDecimal("2")};
+        BigDecimal[] expected = new BigDecimal[]{new BigDecimal("4.00000000000000000000"), new BigDecimal("8.00000000000000000000"),
+                new BigDecimal("-6.00000000000000000000"), new BigDecimal("2.00000000000000000000")};
 
-        assertArrayEquals(expected, matrix.multiplyRow(1, new BigDecimal("2")).getCoefficients());
+        assertArrayEquals(expected, matrix.multiplyRow(1, new BigDecimal("2")).getElements());
     }
 
     @Test
@@ -62,19 +63,22 @@ class MatrixTest {
         BigDecimal[] expected = new BigDecimal[]{new BigDecimal("0.66666666666666666667"), new BigDecimal("1.33333333333333333333"),
                 new BigDecimal("-1.00000000000000000000"), new BigDecimal("0.33333333333333333333")};
 
-        assertArrayEquals(expected, matrix.divideRow(1, new BigDecimal("3")).getCoefficients());
+        assertArrayEquals(expected, matrix.divideRow(1, new BigDecimal("3")).getElements());
     }
 
     @Test
     void addRow() {
         BigDecimal[] row = new BigDecimal[]{new BigDecimal("2"), new BigDecimal("1"),
                 new BigDecimal("2"), new BigDecimal("9")};
-        Row rowToAdd = new Row(row);
+
+        Row rowToAdd = new Row(4);
+        rowToAdd.setElements(row);
+        matrix.addRow(1, rowToAdd);
 
         BigDecimal[] expected = new BigDecimal[]{new BigDecimal("4"), new BigDecimal("5"),
                 new BigDecimal("-1"), new BigDecimal("10")};
 
-        assertArrayEquals(expected, matrix.addRow(1, rowToAdd).getCoefficients());
+        assertArrayEquals(expected, matrix.getRow(1).getElements());
     }
 
     @Test
@@ -82,9 +86,25 @@ class MatrixTest {
         BigDecimal[] row = new BigDecimal[]{new BigDecimal("4"), new BigDecimal("5"),
                 new BigDecimal("-1"), new BigDecimal("10")};
 
-        Row rowToSet = new Row(row);
+        Row rowToSet = new Row(4);
+        rowToSet.setElements(row);
+
         matrix.setRow(0, rowToSet);
 
-        assertArrayEquals(row, matrix.getRows()[0].getCoefficients());
+        assertArrayEquals(row, matrix.getMatrix()[0]);
+    }
+
+    @Test
+    void swapRowsTest() {
+        matrix.swapRows(0, 2);
+
+        BigDecimal[] row1 = new BigDecimal[]{new BigDecimal("2"), new BigDecimal("1"),
+                new BigDecimal("2"), new BigDecimal("9")};
+
+        BigDecimal[] row2 = new BigDecimal[]{new BigDecimal("3"), new BigDecimal("6"),
+                new BigDecimal("-5"), new BigDecimal("0")};
+
+        assertArrayEquals(row2, matrix.getRow(0).getElements());
+        assertArrayEquals(row1, matrix.getRow(2).getElements());
     }
 }
