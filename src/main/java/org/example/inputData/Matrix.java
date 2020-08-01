@@ -1,6 +1,7 @@
 package org.example.inputData;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.math.RoundingMode;
 
 public class Matrix {
@@ -46,7 +47,7 @@ public class Matrix {
         int length = matrix[index].length;
         Row row = new Row(length);
         for (int i = 0; i < length; i++) {
-            row.getElements()[i] = matrix[index][i].multiply(multiplier).setScale(20, RoundingMode.HALF_DOWN);
+            row.getElements()[i] = matrix[index][i].multiply(multiplier, MathContext.DECIMAL32).setScale(20, RoundingMode.HALF_DOWN);
         }
         return row;
     }
