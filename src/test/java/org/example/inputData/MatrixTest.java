@@ -5,8 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class MatrixTest {
 
@@ -106,5 +105,34 @@ class MatrixTest {
 
         assertArrayEquals(row2, matrix.getRow(0).getElements());
         assertArrayEquals(row1, matrix.getRow(2).getElements());
+    }
+
+    @Test
+    void isContradictionTestExpectFalse() {
+        assertFalse(matrix.isContradiction());
+    }
+
+    @Test
+    void isContradictionTestExpectTrue() {
+        BigDecimal[] row1 = new BigDecimal[]{new BigDecimal("0"), new BigDecimal("0"),
+                new BigDecimal("0"), new BigDecimal("9")};
+
+        Row row = new Row(4);
+        row.setElements(row1);
+        matrix.setRow(2, row);
+
+        assertTrue(matrix.isContradiction());
+    }
+
+    @Test
+    void getNumOfSignificantEquationsExpected_2() {
+        BigDecimal[] row1 = new BigDecimal[]{new BigDecimal("0"), new BigDecimal("0"),
+                new BigDecimal("0"), new BigDecimal("0")};
+
+        Row row = new Row(4);
+        row.setElements(row1);
+        matrix.setRow(2, row);
+
+        assertEquals(2, matrix.getNumOfSignificantEquations());
     }
 }

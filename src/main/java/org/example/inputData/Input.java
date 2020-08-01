@@ -13,8 +13,4 @@ public class Input {
     public int getNumOfVariables() {
         return numOfVariables;
     }
-
-    public int getNumOfEquations() {
-        return numOfEquations;
-    }
 }
